@@ -1,0 +1,124 @@
+---
+name: Requirement
+about: Add a client requirement (functional or non-functional) to be tracked and worked
+  in the Project.
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+title: "[REQ]: "
+labels: ["requirement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is the requirement, in plain language?
+      placeholder: e.g. "Users must be able to reset their password via email."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Bullet list of conditions that must be true for this to be considered Done.
+      placeholder: |
+        - [ ] User receives a reset link within 60 seconds
+        - [ ] Link expires after 24 hours
+    validations:
+      required: false
+
+  - type: dropdown
+    id: req-type
+    attributes:
+      label: Requirement Type
+      description: Maps to the "Req Type" Project field.
+      options:
+        - Functional
+        - Non-Functional
+        - Unclear
+    validations:
+      required: true
+
+  - type: dropdown
+    id: nfr-category
+    attributes:
+      label: NFR Category
+      description: Only relevant if Requirement Type is Non-Functional. Maps to "NFR Category".
+      options:
+        - Performance
+        - Security
+        - Usability
+        - Reliability
+        - Scalability
+        - Compliance
+        - Maintainability
+        - N/A
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Maps to the "Priority" Project field.
+      options:
+        - P0
+        - P1
+        - P2
+    validations:
+      required: true
+
+  - type: input
+    id: epic
+    attributes:
+      label: Epic
+      description: Maps to the "Epic" Project field (free text).
+      placeholder: e.g. User Onboarding
+    validations:
+      required: false
+
+  - type: input
+    id: story-points
+    attributes:
+      label: Story Points
+      description: Rough estimate. Maps to the "Story Points" Project field.
+      placeholder: e.g. 3
+    validations:
+      required: false
+
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Where this requirement came from (email subject/date, meeting, doc link, etc). Maps to "Source".
+      placeholder: e.g. "Client email, 2026-08-18, subject: MVP scope"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clarification-status
+    attributes:
+      label: Clarification Status
+      description: Maps to "Clarification Status".
+      options:
+        - Needs Client Input
+        - Needs Clarification
+        - Confirmed
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence
+      description: How confident are we this was accurately captured/interpreted? Maps to "Confidence".
+      options:
+        - Firm
+        - Assumed
+        - Guess
+    validations:
+      required: true
