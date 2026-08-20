@@ -1,0 +1,218 @@
+<svg viewBox="0 0 1400 1800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .box { fill: #f6f8fa; stroke: #0366d6; stroke-width: 2; rx: 6; }
+      .box-p0 { fill: #ffeef0; stroke: #dc3545; stroke-width: 2; rx: 6; }
+      .box-nfr { fill: #fff3cd; stroke: #ffc107; stroke-width: 2; rx: 6; }
+      .box-p1 { fill: #e7f5ff; stroke: #0366d6; stroke-width: 2; rx: 6; }
+      .text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #24292e; }
+      .text-bold { font-weight: 600; }
+      .text-small { font-size: 11px; fill: #57606a; }
+      .arrow { stroke: #0366d6; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-p0 { stroke: #dc3545; stroke-width: 2; fill: none; marker-end: url(#arrowhead-p0); }
+      .arrow-nfr { stroke: #ffc107; stroke-width: 2; fill: none; marker-end: url(#arrowhead-nfr); }
+      .label { font-size: 12px; font-weight: 600; fill: #24292e; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#0366d6" />
+    </marker>
+    <marker id="arrowhead-p0" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc3545" />
+    </marker>
+    <marker id="arrowhead-nfr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ffc107" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" class="text text-bold" text-anchor="middle" font-size="24">
+    Account Management System - Requirements Architecture
+  </text>
+
+  <!-- ACTORS LAYER -->
+  <text x="50" y="80" class="label">ACTORS</text>
+
+  <!-- Customer -->
+  <rect x="150" y="100" width="140" height="70" class="box"/>
+  <text x="220" y="125" class="text text-bold" text-anchor="middle">👤 Customer</text>
+  <text x="220" y="145" class="text text-small" text-anchor="middle">(End User)</text>
+  <text x="220" y="160" class="text text-small" text-anchor="middle">Web/Mobile</text>
+
+  <!-- Admin -->
+  <rect x="350" y="100" width="140" height="70" class="box"/>
+  <text x="420" y="125" class="text text-bold" text-anchor="middle">👨‍💼 Admin</text>
+  <text x="420" y="145" class="text text-small" text-anchor="middle">(Internal)</text>
+  <text x="420" y="160" class="text text-small" text-anchor="middle">Dashboard</text>
+
+  <!-- External Systems -->
+  <rect x="550" y="100" width="140" height="70" class="box"/>
+  <text x="620" y="125" class="text text-bold" text-anchor="middle">🔗 External</text>
+  <text x="620" y="145" class="text text-small" text-anchor="middle">Systems</text>
+  <text x="620" y="160" class="text text-small" text-anchor="middle">Gateway, KYC</text>
+
+  <!-- Arrows from actors to API Gateway -->
+  <path d="M 220 170 L 220 210" class="arrow"/>
+  <path d="M 420 170 L 420 210" class="arrow"/>
+  <path d="M 620 170 L 620 210" class="arrow"/>
+
+  <!-- API GATEWAY & SECURITY LAYER -->
+  <text x="50" y="210" class="label">API LAYER</text>
+
+  <rect x="100" y="220" width="800" height="100" class="box-p0"/>
+  <text x="500" y="245" class="text text-bold" text-anchor="middle">#11: Security Requirements (P0) - 13 pts</text>
+  <text x="500" y="265" class="text text-small" text-anchor="middle">🔐 TLS 1.2+ | JWT Auth | RBAC | KYC | Fraud Detection | Rate Limiting</text>
+  <text x="500" y="285" class="text text-small" text-anchor="middle">Encryption at Rest | Audit Logs (Append-only) | PII Masking</text>
+  <text x="500" y="305" class="text text-small" text-anchor="middle">Applies to ALL operations below</text>
+
+  <!-- Arrow to Foundation -->
+  <path d="M 500 320 L 500 360" class="arrow-p0"/>
+
+  <!-- FOUNDATION LAYER (P0) -->
+  <text x="50" y="360" class="label">FOUNDATION LAYER (P0)</text>
+
+  <!-- Account Creation -->
+  <rect x="100" y="380" width="300" height="100" class="box-p0"/>
+  <text x="250" y="405" class="text text-bold" text-anchor="middle">#9: Account Creation API</text>
+  <text x="250" y="425" class="text text-small" text-anchor="middle">POST /api/v1/accounts</text>
+  <text x="250" y="440" class="text text-small" text-anchor="middle">Generate accountId (UUID)</text>
+  <text x="250" y="455" class="text text-small" text-anchor="middle">Trigger KYC Check</text>
+  <text x="250" y="470" class="text text-small" text-anchor="middle">Story Points: 8</text>
+
+  <!-- Account Profile -->
+  <rect x="500" y="380" width="300" height="100" class="box-p0"/>
+  <text x="650" y="405" class="text text-bold" text-anchor="middle">#10: Account Profile Management</text>
+  <text x="650" y="425" class="text text-small" text-anchor="middle">GET/PUT /api/v1/accounts/{id}</text>
+  <text x="650" y="440" class="text text-small" text-anchor="middle">View & Update Profile</text>
+  <text x="650" y="455" class="text text-small" text-anchor="middle">Immutable Fields</text>
+  <text x="650" y="470" class="text text-small" text-anchor="middle">Story Points: 5</text>
+
+  <!-- Arrows to Operations -->
+  <path d="M 250 480 L 250 540" class="arrow-p0"/>
+  <path d="M 650 480 L 650 540" class="arrow-p0"/>
+
+  <!-- OPERATIONS LAYER -->
+  <text x="50" y="540" class="label">OPERATIONS LAYER</text>
+
+  <!-- Deposits & Withdrawals (P0) -->
+  <rect x="100" y="560" width="300" height="110" class="box-p0"/>
+  <text x="250" y="585" class="text text-bold" text-anchor="middle">#12: Deposits & Withdrawals</text>
+  <text x="250" y="605" class="text text-small" text-anchor="middle">POST /api/v1/accounts/{id}/</text>
+  <text x="250" y="620" class="text text-small" text-anchor="middle">transactions</text>
+  <text x="250" y="635" class="text text-small" text-anchor="middle">ACID Compliance | Immutable Ledger</text>
+  <text x="250" y="650" class="text text-small" text-anchor="middle">P0 | Story Points: 8</text>
+
+  <!-- Arrow from Deposits/Withdrawals to Transfers -->
+  <path d="M 250 670 L 250 710 L 550 710 L 550 750" class="arrow-p0"/>
+
+  <!-- Transfers (P1) -->
+  <rect x="400" y="750" width="300" height="110" class="box-p1"/>
+  <text x="550" y="775" class="text text-bold" text-anchor="middle">#13: Account Transfers</text>
+  <text x="550" y="795" class="text text-small" text-anchor="middle">Internal & External Transfers</text>
+  <text x="550" y="810" class="text text-small" text-anchor="middle">Scheduled & Recurring</text>
+  <text x="550" y="825" class="text text-small" text-anchor="middle">ACH/SWIFT Integration</text>
+  <text x="550" y="840" class="text text-small" text-anchor="middle">P1 | Story Points: 13</text>
+
+  <!-- Freeze/Close/Reopen (P1) -->
+  <rect x="700" y="560" width="300" height="110" class="box-p1"/>
+  <text x="850" y="585" class="text text-bold" text-anchor="middle">#14: Freeze/Close/Reopen</text>
+  <text x="850" y="605" class="text text-small" text-anchor="middle">Admin Operations</text>
+  <text x="850" y="620" class="text text-small" text-anchor="middle">Account Lifecycle Management</text>
+  <text x="850" y="635" class="text text-small" text-anchor="middle">Immutable Audit Trail</text>
+  <text x="850" y="650" class="text text-small" text-anchor="middle">P1 | Story Points: 5</text>
+
+  <!-- Arrow from Freeze/Close to Notifications -->
+  <path d="M 850 670 L 850 710 L 700 710 L 700 750" class="arrow-p0"/>
+
+  <!-- ANALYTICS & COMMUNICATION LAYER -->
+  <text x="50" y="750" class="label">ANALYTICS & COMMUNICATION (P1)</text>
+
+  <!-- Transaction History (P1) -->
+  <rect x="100" y="750" width="300" height="110" class="box-p1"/>
+  <text x="250" y="775" class="text text-bold" text-anchor="middle">#15: Transaction History</text>
+  <text x="250" y="795" class="text text-small" text-anchor="middle">GET /api/v1/accounts/{id}/</text>
+  <text x="250" y="810" class="text text-small" text-anchor="middle">transactions</text>
+  <text x="250" y="825" class="text text-small" text-anchor="middle">CSV/PDF Export | 7-Year Retention</text>
+  <text x="250" y="840" class="text text-small" text-anchor="middle">P1 | Story Points: 8</text>
+
+  <!-- Notifications (P1) -->
+  <rect x="700" y="750" width="300" height="110" class="box-p1"/>
+  <text x="850" y="775" class="text text-bold" text-anchor="middle">#16: Notifications</text>
+  <text x="850" y="795" class="text text-small" text-anchor="middle">Email | SMS | Push</text>
+  <text x="850" y="810" class="text text-small" text-anchor="middle">Async Delivery with Retry & DLQ</text>
+  <text x="850" y="825" class="text text-small" text-anchor="middle">User-Configurable Preferences</text>
+  <text x="850" y="840" class="text text-small" text-anchor="middle">P1 | Story Points: 8</text>
+
+  <!-- Arrows converging to NFR -->
+  <path d="M 250 860 L 250 920 L 500 920 L 500 960" class="arrow"/>
+  <path d="M 850 860 L 850 920 L 500 920" class="arrow"/>
+  <path d="M 550 670 L 550 920" class="arrow"/>
+
+  <!-- NON-FUNCTIONAL REQUIREMENTS LAYER -->
+  <text x="50" y="960" class="label">NON-FUNCTIONAL REQUIREMENTS (P0) - Applies Across All</text>
+
+  <!-- Compliance -->
+  <rect x="50" y="980" width="220" height="100" class="box-nfr"/>
+  <text x="160" y="1005" class="text text-bold" text-anchor="middle">#5: Compliance</text>
+  <text x="160" y="1025" class="text text-small" text-anchor="middle">GDPR/CCPA/PCI DSS</text>
+  <text x="160" y="1040" class="text text-small" text-anchor="middle">7-Year Retention</text>
+  <text x="160" y="1055" class="text text-small" text-anchor="middle">Right to Be Forgotten</text>
+  <text x="160" y="1070" class="text text-small" text-anchor="middle">8 pts</text>
+
+  <!-- Consistency -->
+  <rect x="300" y="980" width="220" height="100" class="box-nfr"/>
+  <text x="410" y="1005" class="text text-bold" text-anchor="middle">#6: Consistency</text>
+  <text x="410" y="1025" class="text text-small" text-anchor="middle">ACID Transactions</text>
+  <text x="410" y="1040" class="text text-small" text-anchor="middle">No Lost Updates</text>
+  <text x="410" y="1055" class="text text-small" text-anchor="middle">Daily Reconciliation</text>
+  <text x="410" y="1070" class="text text-small" text-anchor="middle">13 pts</text>
+
+  <!-- Availability -->
+  <rect x="550" y="980" width="220" height="100" class="box-nfr"/>
+  <text x="660" y="1005" class="text text-bold" text-anchor="middle">#7: Availability</text>
+  <text x="660" y="1025" class="text text-small" text-anchor="middle">99.95% Uptime SLA</text>
+  <text x="660" y="1040" class="text text-small" text-anchor="middle">Multi-AZ Deployment</text>
+  <text x="660" y="1055" class="text text-small" text-anchor="middle">Auto-Failover (2 min)</text>
+  <text x="660" y="1070" class="text text-small" text-anchor="middle">13 pts</text>
+
+  <!-- Performance -->
+  <rect x="800" y="980" width="220" height="100" class="box-nfr"/>
+  <text x="910" y="1005" class="text text-bold" text-anchor="middle">#8: Performance</text>
+  <text x="910" y="1025" class="text text-small" text-anchor="middle">200ms @ p95 (GET)</text>
+  <text x="910" y="1040" class="text text-small" text-anchor="middle">1,000 Concurrent Users</text>
+  <text x="910" y="1055" class="text text-small" text-anchor="middle">Horizontal Scaling</text>
+  <text x="910" y="1070" class="text text-small" text-anchor="middle">8 pts</text>
+
+  <!-- DATABASE & INFRASTRUCTURE -->
+  <text x="50" y="1130" class="label">DATA LAYER & INFRASTRUCTURE</text>
+
+  <rect x="200" y="1150" width="900" height="80" class="box"/>
+  <text x="650" y="1175" class="text text-bold" text-anchor="middle">Multi-AZ Deployment: Primary DB | Ledger DB | Read Replicas</text>
+  <text x="650" y="1195" class="text text-small" text-anchor="middle">Daily Automated Backups | Point-in-Time Recovery (30 days) | Event-Sourced Ledger</text>
+
+  <!-- LEGEND -->
+  <text x="50" y="1290" class="label">LEGEND</text>
+
+  <rect x="50" y="1310" width="60" height="30" class="box-p0"/>
+  <text x="140" y="1330" class="text">P0 - Required for Launch (Critical Path)</text>
+
+  <rect x="50" y="1360" width="60" height="30" class="box-p1"/>
+  <text x="140" y="1380" class="text">P1 - Phase 2 Implementation</text>
+
+  <rect x="50" y="1410" width="60" height="30" class="box-nfr"/>
+  <text x="140" y="1430" class="text">Non-Functional (Applies to All)</text>
+
+  <!-- IMPLEMENTATION PHASES -->
+  <text x="50" y="1500" class="label">IMPLEMENTATION PHASES</text>
+
+  <text x="50" y="1530" class="text text-bold">Phase 1: Foundation (P0)</text>
+  <text x="70" y="1550" class="text">#11 Security → #9 Account Creation → #10 Profile → #12 Deposits/Withdrawals</text>
+
+  <text x="50" y="1580" class="text text-bold">Phase 2: Operations (P1)</text>
+  <text x="70" y="1600" class="text">#13 Transfers → #14 Freeze/Close → #15 History → #16 Notifications</text>
+
+  <text x="50" y="1630" class="text text-bold">Phase 3: Non-Functional (P0 - Parallel)</text>
+  <text x="70" y="1650" class="text">#5 Compliance | #6 Consistency | #7 Availability | #8 Performance</text>
+
+  <text x="50" y="1700" class="text text-small">Total Story Points: 104 | Critical Path: 8 + 5 + 8 = 21 (P0 Operations)</text>
+  <text x="50" y="1720" class="text text-small">Diagram Source: <tspan class="text-bold">Account Management System Requirements</tspan></text>
+</svg>
