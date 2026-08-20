@@ -12,7 +12,7 @@ Welcome to the Account Management System requirements documentation. This page p
 
 ## Requirements Flowchart
 
-![Account Management System Requirements Architecture](./flowchart.svg)
+![Account Management System Requirements Architecture](./flowchart.png)
 > High-level architecture and dependency flow across functional and non-functional requirements.
 
 ---
