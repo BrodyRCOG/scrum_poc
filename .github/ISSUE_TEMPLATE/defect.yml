@@ -1,0 +1,88 @@
+name: Defect
+description: Report a defect or bug discovered after a project has been completed.
+title: "[DEFECT]: "
+labels: ["defect"]
+assignees: []
+body:
+  - type: input
+    id: short-description
+    attributes:
+      label: Short Description
+      description: A brief summary of the defect.
+      placeholder: e.g. "Password reset link does not expire after 24 hours."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to reliably reproduce the defect.
+      placeholder: |
+        1. Navigate to the login page
+        2. Click "Forgot Password"
+        3. Use the reset link after 24 hours
+        4. Observe that the link is still valid
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+      placeholder: e.g. "The reset link should be invalid after 24 hours."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: e.g. "The reset link remains valid indefinitely."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How urgently does this defect need to be addressed?
+      options:
+        - P0 – Critical (system unusable / data loss)
+        - P1 – High (major feature broken)
+        - P2 – Medium (feature partially broken, workaround exists)
+        - P3 – Low (minor cosmetic or edge case)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is the impact of this defect?
+      options:
+        - Blocker
+        - Major
+        - Minor
+        - Trivial
+    validations:
+      required: true
+
+  - type: input
+    id: affected-version
+    attributes:
+      label: Affected Version / Environment
+      description: Which version or environment is affected?
+      placeholder: e.g. v1.2.0 / Production
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Screenshots, logs, related requirements, or any other relevant information.
+    validations:
+      required: false
