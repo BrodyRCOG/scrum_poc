@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Password reset via email",
+    "description": "Users must be able to reset their password via a link sent to their registered email.",
+    "acceptance_criteria": [
+      "User receives a reset link within 60 seconds of request",
+      "Link expires after 24 hours",
+      "Old password is invalidated once a new one is set"
+    ],
+    "req_type": "Functional",
+    "nfr_category": "N/A",
+    "priority": "P1",
+    "epic": "Account Management",
+    "story_points": 3,
+    "source": "Client email, 2026-08-18, subject: MVP scope",
+    "clarification_status": "Confirmed",
+    "confidence": "Firm"
+  },
+  {
+    "title": "Page load time under 2 seconds",
+    "description": "All primary dashboard pages should load in under 2 seconds on a standard broadband connection.",
+    "acceptance_criteria": [
+      "95th percentile page load time <= 2s under normal load"
+    ],
+    "req_type": "Non-Functional",
+    "nfr_category": "Performance",
+    "priority": "P2",
+    "epic": "Dashboard",
+    "story_points": null,
+    "source": "Client email, 2026-08-18, subject: MVP scope",
+    "clarification_status": "Needs Clarification",
+    "confidence": "Assumed"
+  }
+]
