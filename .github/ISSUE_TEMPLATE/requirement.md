@@ -1,13 +1,5 @@
----
 name: Requirement
-about: Add a client requirement (functional or non-functional) to be tracked and worked
-  in the Project.
-title: ''
-labels: ''
-assignees: ''
-
----
-
+description: Add a client requirement (functional or non-functional) to be tracked and worked in the Project.
 title: "[REQ]: "
 labels: ["requirement"]
 body:
