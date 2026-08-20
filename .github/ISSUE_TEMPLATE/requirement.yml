@@ -87,7 +87,6 @@ body:
     attributes:
       label: Source
       description: Where this requirement came from (email subject/date, meeting, doc link, etc). Maps to "Source".
-      placeholder: e.g. "Client email, 2026-08-18, subject: MVP scope"
     validations:
       required: true
 
