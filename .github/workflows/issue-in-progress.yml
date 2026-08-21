@@ -41,6 +41,8 @@ jobs:
               }
             `, { issueId: issueNodeId });
 
+            console.log("Project items found:", JSON.stringify(result.node.projectItems.nodes));
+
             // Step 2: Find the item that belongs to your specific project
             const items = result.node.projectItems.nodes;
             const projectItem = items.find(item => item.project.id === PROJECT_ID);
