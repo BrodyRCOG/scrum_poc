@@ -6,7 +6,6 @@ on:
 jobs:
   set-fields:
     runs-on: ubuntu-latest
-    # Only run for issues with the "[REQ]" title
     if: startsWith(github.event.issue.title, '[REQ]')
     steps:
       - name: Parse issue body and set project fields
@@ -24,7 +23,6 @@ jobs:
             const FIELDS = {
               reqType: {
                 id: "PVTSSF_lAHOEgNY9M4Bg3iszhf6qlQ",
-                type: "singleSelect",
                 options: {
                   "Functional":     "87039ebb",
                   "Non-Functional": "54b5a987",
@@ -33,7 +31,6 @@ jobs:
               },
               nfrCategory: {
                 id: "PVTSSF_lAHOEgNY9M4Bg3iszhf6rTM",
-                type: "singleSelect",
                 options: {
                   "Performance":     "c190da29",
                   "Security":        "ed27da4b",
@@ -46,7 +43,6 @@ jobs:
               },
               priority: {
                 id: "PVTSSF_lAHOEgNY9M4Bg3iszhf6o5s",
-                type: "singleSelect",
                 options: {
                   "P0": "e70bad89",
                   "P1": "2c338289",
@@ -55,60 +51,44 @@ jobs:
               },
               clarificationStatus: {
                 id: "PVTSSF_lAHOEgNY9M4Bg3iszhf6r0M",
-                type: "singleSelect",
                 options: {
                   "Needs Client Input":  "fdc03283",
                   "Needs Clarification": "ad7ae577",
                   "Confirmed":           "75a6e5a8",
                 },
               },
-              // ── Add IDs below once these fields are created in your Project ──
-              // confidence: {
-              //   id: "PVTSSF_...",
-              //   type: "singleSelect",
-              //   options: {
-              //     "Firm":    "...",
-              //     "Assumed": "...",
-              //     "Guess":   "...",
-              //   },
-              // },
-              // epic: {
-              //   id: "PVTF_...",
-              //   type: "text",
-              // },
-              // storyPoints: {
-              //   id: "PVTF_...",
-              //   type: "number",
-              // },
-              // source: {
-              //   id: "PVTF_...",
-              //   type: "text",
-              // },
+              confidence: {
+                id: "PVTSSF_lAHOEgNY9M4Bg3iszhf6sF8",
+                options: {
+                  "Firm":    "3ed7d19a",
+                  "Assumed": "8b5a5486",
+                  "Guess":   "fdaa8c42",
+                },
+              },
+              storyPoints: { id: "PVTF_lAHOEgNY9M4Bg3iszhf6ou8" },
+              source:      { id: "PVTF_lAHOEgNY9M4Bg3iszhf6rWA" },
             };
 
             // ── Parse helpers ────────────────────────────────────────────────
-            // Issue forms render each field as: "### Label\n\nValue"
             function parseField(label) {
               const regex = new RegExp(`###\\s*${label}\\s*\\n+([\\s\\S]*?)(?=\\n###|$)`);
               const match = body.match(regex);
               return match ? match[1].trim() : null;
             }
 
-            // ── Parse all fields from the issue body ─────────────────────────
             const parsed = {
               reqType:             parseField("Requirement Type"),
               nfrCategory:         parseField("NFR Category"),
               priority:            parseField("Priority"),
               clarificationStatus: parseField("Clarification Status"),
               confidence:          parseField("Confidence"),
-              epic:                parseField("Epic"),
               storyPoints:         parseField("Story Points"),
               source:              parseField("Source"),
             };
 
             console.log("Parsed fields:", JSON.stringify(parsed, null, 2));
 
-            // ── Step 1: Add issue to the project ────────────────────────────
+            // ── Step 1: Add issue to the project ─────────────────────────────
             const addResult = await github.graphql(`
               mutation($projectId: ID!, $contentId: ID!) {
                 addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
@@ -120,7 +100,7 @@ jobs:
             const itemId = addResult.addProjectV2ItemById.item.id;
             console.log(`Added issue #${issueNumber} to project as item ${itemId}`);
 
-            // ── Step 2: Helper to set a single-select field ──────────────────
+            // ── Helpers ───────────────────────────────────────────────────────
             async function setSingleSelect(fieldDef, rawValue) {
               if (!rawValue || rawValue === "_No response_") return;
               const optionId = fieldDef.options[rawValue];
@@ -131,9 +111,7 @@ jobs:
               await github.graphql(`
                 mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                   updateProjectV2ItemFieldValue(input: {
-                    projectId: $projectId,
-                    itemId: $itemId,
-                    fieldId: $fieldId,
+                    projectId: $projectId, itemId: $itemId, fieldId: $fieldId,
                     value: { singleSelectOptionId: $optionId }
                   }) { projectV2Item { id } }
                 }
@@ -141,15 +119,12 @@ jobs:
               console.log(`Set field ${fieldDef.id} → "${rawValue}"`);
             }
 
-            // ── Step 3: Helper to set a text field ───────────────────────────
             async function setText(fieldId, value) {
               if (!value || value === "_No response_") return;
               await github.graphql(`
                 mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $text: String!) {
                   updateProjectV2ItemFieldValue(input: {
-                    projectId: $projectId,
-                    itemId: $itemId,
-                    fieldId: $fieldId,
+                    projectId: $projectId, itemId: $itemId, fieldId: $fieldId,
                     value: { text: $text }
                   }) { projectV2Item { id } }
                 }
@@ -157,7 +132,6 @@ jobs:
               console.log(`Set text field ${fieldId} → "${value}"`);
             }
 
-            // ── Step 4: Helper to set a number field ─────────────────────────
             async function setNumber(fieldId, rawValue) {
               if (!rawValue || rawValue === "_No response_") return;
               const num = parseFloat(rawValue);
@@ -168,9 +142,7 @@ jobs:
               await github.graphql(`
                 mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $num: Float!) {
                   updateProjectV2ItemFieldValue(input: {
-                    projectId: $projectId,
-                    itemId: $itemId,
-                    fieldId: $fieldId,
+                    projectId: $projectId, itemId: $itemId, fieldId: $fieldId,
                     value: { number: $num }
                   }) { projectV2Item { id } }
                 }
@@ -178,16 +150,13 @@ jobs:
               console.log(`Set number field ${fieldId} → ${num}`);
             }
 
-            // ── Step 5: Set all fields ───────────────────────────────────────
+            // ── Set all fields ────────────────────────────────────────────────
             await setSingleSelect(FIELDS.reqType,             parsed.reqType);
             await setSingleSelect(FIELDS.nfrCategory,         parsed.nfrCategory);
             await setSingleSelect(FIELDS.priority,            parsed.priority);
             await setSingleSelect(FIELDS.clarificationStatus, parsed.clarificationStatus);
-
-            // Uncomment once field IDs are added to the FIELDS object above:
-            // await setSingleSelect(FIELDS.confidence,  parsed.confidence);
-            // await setText(FIELDS.epic.id,             parsed.epic);
-            // await setNumber(FIELDS.storyPoints.id,    parsed.storyPoints);
-            // await setText(FIELDS.source.id,           parsed.source);
+            await setSingleSelect(FIELDS.confidence,          parsed.confidence);
+            await setNumber(FIELDS.storyPoints.id,            parsed.storyPoints);
+            await setText(FIELDS.source.id,                   parsed.source);
 
             console.log(`Done setting fields for issue #${issueNumber}`);
