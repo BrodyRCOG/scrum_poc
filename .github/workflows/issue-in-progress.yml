@@ -1,0 +1,70 @@
+name: Set Issue In Progress on Assign
+
+on:
+  issues:
+    types: [assigned]
+
+jobs:
+  set-in-progress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set status to In Progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const PROJECT_ID = "PVT_kwHOEgNY9M4Bg3is";         // ← Replace with your Project ID
+            const STATUS_FIELD_ID = "PVTSSF_lAHOEgNY9M4Bg3iszhf1eeA"; // ← Replace with your Status Field ID
+            const IN_PROGRESS_OPTION_ID = "47fc9ee4";     // ← Replace with your "In Progress" option ID
+
+            const issueNodeId = context.payload.issue.node_id;
+
+            // Step 1: Find the project item linked to this issue
+            const result = await github.graphql(`
+              query($issueId: ID!) {
+                node(id: $issueId) {
+                  ... on Issue {
+                    projectItems(first: 10) {
+                      nodes {
+                        id
+                        project {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `, { issueId: issueNodeId });
+
+            // Step 2: Find the item that belongs to your specific project
+            const items = result.node.projectItems.nodes;
+            const projectItem = items.find(item => item.project.id === PROJECT_ID);
+
+            if (!projectItem) {
+              console.log("Issue is not in the target project. Skipping.");
+              return;
+            }
+
+            // Step 3: Update the status field to "In Progress"
+            await github.graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId
+                  itemId: $itemId
+                  fieldId: $fieldId
+                  value: { singleSelectOptionId: $optionId }
+                }) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId: PROJECT_ID,
+              itemId: projectItem.id,
+              fieldId: STATUS_FIELD_ID,
+              optionId: IN_PROGRESS_OPTION_ID,
+            });
+
+            console.log(`Issue #${context.payload.issue.number} status set to In Progress.`);
