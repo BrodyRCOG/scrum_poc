@@ -1,6 +1,7 @@
 name: Requirement
 description: Add a client requirement (functional or non-functional) to be tracked and worked in the Project.
 title: "[REQ]: "
+projects: ["BrodyRCOG/1"]
 labels: ["requirement"]
 body:
   - type: textarea
@@ -63,15 +64,6 @@ body:
         - P2
     validations:
       required: true
-
-  - type: input
-    id: epic
-    attributes:
-      label: Epic
-      description: Maps to the "Epic" Project field (free text).
-      placeholder: e.g. User Onboarding
-    validations:
-      required: false
 
   - type: input
     id: story-points
