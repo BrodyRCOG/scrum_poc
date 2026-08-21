@@ -17,60 +17,82 @@ jobs:
         with:
           github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
-            const PROJECT_ID = "PVT_kwHOEgNY9M4Bg3is";         // ← Replace with your Project ID
-            const STATUS_FIELD_ID = "PVTSSF_lAHOEgNY9M4Bg3iszhf1eeA"; // ← Replace with your Status Field ID
-            const IN_PROGRESS_OPTION_ID = "47fc9ee4";     // ← Replace with your "In Progress" option ID
+            const PROJECT_ID = "PVT_kwHOEgNY9M4Bg3is";
+            const STATUS_FIELD_ID = "PVTSSF_lAHOEgNY9M4Bg3iszhf1eeA";
+            const IN_PROGRESS_OPTION_ID = "47fc9ee4";
+            
+            // Helper function: update a project item's status to In Progress
+            async function setInProgress(issueNodeId) {
+              // Add/get the issue in the project
+              const addResult = await github.graphql(`
+                mutation($projectId: ID!, $contentId: ID!) {
+                  addProjectV2ItemById(input: {
+                    projectId: $projectId
+                    contentId: $contentId
+                  }) {
+                    item {
+                      id
+                      project { id }
+                    }
+                  }
+                }
+              `, {
+                projectId: PROJECT_ID,
+                contentId: issueNodeId,
+              });
 
+              const projectItem = addResult.addProjectV2ItemById.item;
+
+              if (!projectItem || projectItem.project.id !== PROJECT_ID) {
+                console.log(`Issue not in target project, skipping.`);
+                return;
+              }
+
+              // Update status to In Progress
+              await github.graphql(`
+                mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { singleSelectOptionId: $optionId }
+                  }) {
+                    projectV2Item { id }
+                  }
+                }
+              `, {
+                projectId: PROJECT_ID,
+                itemId: projectItem.id,
+                fieldId: STATUS_FIELD_ID,
+                optionId: IN_PROGRESS_OPTION_ID,
+              });
+
+              console.log(`Status set to In Progress for node: ${issueNodeId}`);
+            }
+
+            // Step 1: Update the assigned issue itself
             const issueNodeId = context.payload.issue.node_id;
+            await setInProgress(issueNodeId);
 
-            // Step 1: Find the project item linked to this issue
-            const result = await github.graphql(`
+            // Step 2: Look up the parent issue (if this is a sub-issue)
+            const parentResult = await github.graphql(`
               query($issueId: ID!) {
                 node(id: $issueId) {
                   ... on Issue {
-                    projectItems(first: 10) {
-                      nodes {
-                        id
-                        project {
-                          id
-                        }
-                      }
+                    parent {
+                      id
+                      number
                     }
                   }
                 }
               }
             `, { issueId: issueNodeId });
 
-            console.log("Project items found:", JSON.stringify(result.node.projectItems.nodes));
+            const parent = parentResult.node.parent;
 
-            // Step 2: Find the item that belongs to your specific project
-            const items = result.node.projectItems.nodes;
-            const projectItem = items.find(item => item.project.id === PROJECT_ID);
-
-            if (!projectItem) {
-              console.log("Issue is not in the target project. Skipping.");
-              return;
+            if (parent) {
+              console.log(`Found parent issue #${parent.number}, updating status...`);
+              await setInProgress(parent.id);
+            } else {
+              console.log("No parent issue found, nothing more to do.");
             }
-
-            // Step 3: Update the status field to "In Progress"
-            await github.graphql(`
-              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
-                updateProjectV2ItemFieldValue(input: {
-                  projectId: $projectId
-                  itemId: $itemId
-                  fieldId: $fieldId
-                  value: { singleSelectOptionId: $optionId }
-                }) {
-                  projectV2Item {
-                    id
-                  }
-                }
-              }
-            `, {
-              projectId: PROJECT_ID,
-              itemId: projectItem.id,
-              fieldId: STATUS_FIELD_ID,
-              optionId: IN_PROGRESS_OPTION_ID,
-            });
-
-            console.log(`Issue #${context.payload.issue.number} status set to In Progress.`);
