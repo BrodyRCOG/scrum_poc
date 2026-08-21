@@ -15,7 +15,7 @@ jobs:
       - name: Set status to In Progress
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
             const PROJECT_ID = "PVT_kwHOEgNY9M4Bg3is";         // ← Replace with your Project ID
             const STATUS_FIELD_ID = "PVTSSF_lAHOEgNY9M4Bg3iszhf1eeA"; // ← Replace with your Status Field ID
