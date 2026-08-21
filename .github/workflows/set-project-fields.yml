@@ -6,8 +6,8 @@ on:
 jobs:
   set-fields:
     runs-on: ubuntu-latest
-    # Only run for issues with the "requirement" label
-    if: contains(toJson(github.event.issue.labels), '"requirement"')
+    # Only run for issues with the "[REQ]" title
+    if: startsWith(github.event.issue.title, '[REQ]')
     steps:
       - name: Parse issue body and set project fields
         uses: actions/github-script@v7
