@@ -1,0 +1,75 @@
+name: Set Project Fields on Issue Creation
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  set-fields:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse issue body and set project fields
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}  # needs project write scope
+          script: |
+            const body = context.payload.issue.body || "";
+            const issueNodeId = context.payload.issue.node_id;
+
+            // --- Your IDs from the snippet you shared ---
+            const PROJECT_ID = "PVT_kwHOEgNY9M4Bg3is";
+            const STATUS_FIELD_ID = "PVTSSF_lAHOEgNY9M4Bg3iszhf1eeA";
+            const IN_PROGRESS_OPTION_ID = "47fc9ee4";
+
+            // Parse the status value from the issue form body
+            // Issue forms render as: "### Status\n\nIn Progress"
+            const statusMatch = body.match(/###\s*Status\s*\n+(.+)/);
+            const statusValue = statusMatch ? statusMatch[1].trim() : null;
+
+            if (!statusValue) {
+              console.log("No status found in issue body.");
+              return;
+            }
+
+            // Map parsed value to option IDs
+            const statusMap = {
+              "In Progress": IN_PROGRESS_OPTION_ID,
+              // "Todo": "your-todo-option-id",
+              // "Done": "your-done-option-id",
+            };
+            const optionId = statusMap[statusValue];
+            if (!optionId) {
+              console.log(`Unknown status value: ${statusValue}`);
+              return;
+            }
+
+            // Step 1: Add issue to the project, get the item ID
+            const addResult = await github.graphql(`
+              mutation($projectId: ID!, $contentId: ID!) {
+                addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                  item { id }
+                }
+              }
+            `, { projectId: PROJECT_ID, contentId: issueNodeId });
+
+            const itemId = addResult.addProjectV2ItemById.item.id;
+
+            // Step 2: Set the Status field
+            await github.graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: { singleSelectOptionId: $optionId }
+                }) {
+                  projectV2Item { id }
+                }
+              }
+            `, {
+              projectId: PROJECT_ID,
+              itemId,
+              fieldId: STATUS_FIELD_ID,
+              optionId,
+            });
+
+            console.log(`Set Status to "${statusValue}" for issue #${context.payload.issue.number}`);
