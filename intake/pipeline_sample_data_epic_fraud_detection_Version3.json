@@ -1,0 +1,60 @@
+{
+  "epics": [
+    {
+      "title": "Fraud Detection and Alerts",
+      "description": "The system must proactively monitor transactions for suspicious activity and notify users and internal teams in real time.",
+      "requirements": [
+        {
+          "title": "Real-Time Transaction Monitoring",
+          "description": "All transactions must be evaluated against a fraud detection ruleset in real time before being approved or flagged.",
+          "acceptance_criteria": [
+            "Every transaction is scored by the fraud engine before completion",
+            "Transactions flagged as high-risk are held for manual review",
+            "Flagged transactions notify the user via push notification and email",
+            "Fraud engine response time does not exceed 300ms"
+          ],
+          "requirement_type": "Functional",
+          "nfr_category": "N/A",
+          "priority": "P0",
+          "story_points": 13,
+          "source": "Compliance review meeting - 2026-08-05",
+          "clarification_status": "Confirmed",
+          "confidence": "Firm"
+        },
+        {
+          "title": "Fraud Alert Latency",
+          "description": "Fraud alerts must be delivered to the user within 10 seconds of a suspicious transaction being detected.",
+          "acceptance_criteria": [
+            "Push notification delivered within 10 seconds of flag",
+            "Email alert delivered within 60 seconds of flag",
+            "Alert includes transaction amount, merchant, date, and a link to dispute"
+          ],
+          "requirement_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "priority": "P0",
+          "story_points": 5,
+          "source": "Compliance review meeting - 2026-08-05",
+          "clarification_status": "Confirmed",
+          "confidence": "Firm"
+        },
+        {
+          "title": "User Transaction Dispute Submission",
+          "description": "Users must be able to submit a dispute for any transaction directly within the app, triggering an internal review workflow.",
+          "acceptance_criteria": [
+            "Dispute form accessible from any transaction detail view",
+            "User must select a dispute reason from a predefined list",
+            "Confirmation of dispute submission sent via email within 5 minutes",
+            "Disputed transaction is visually flagged in transaction history"
+          ],
+          "requirement_type": "Functional",
+          "nfr_category": "N/A",
+          "priority": "P1",
+          "story_points": 5,
+          "source": "Client email - Subject: Dispute Handling - 2026-08-11",
+          "clarification_status": "Needs Clarification",
+          "confidence": "Assumed"
+        }
+      ]
+    }
+  ]
+}
