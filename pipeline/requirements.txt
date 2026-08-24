@@ -1,0 +1,6 @@
+anthropic>=0.25.0
+python-dotenv
+requests
+pandas
+openpyxl
+openai-whisper
